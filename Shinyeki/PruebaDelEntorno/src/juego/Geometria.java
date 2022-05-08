@@ -23,7 +23,7 @@ public class Geometria {
 			this.alto = h;
 			double radio = 50;
 			Point c = centroPantalla();
-			circulo = new Circulo(c.x,c.y,radio);
+			circulo = new Circulo(c.x,c.y,this.radio);
 		}
 
 	public Point centroPantalla()
@@ -42,9 +42,10 @@ public class Geometria {
 		{
 			Color colorMikasa = new Color(255,255,255);
 			Color direccionamiento = new Color (0,255,0);
+
+			entorno.dibujarCirculo(circulo.x,circulo.y,50, colorMikasa);
+			entorno.dibujarTriangulo(this.circulo.x-this.circulo.radio,this.circulo.y - this.radio,50,20,this.angulo,direccionamiento);
 			
-			entorno.dibujarCirculo(circulo.x,circulo.y,50, colorMikasa);		
-			entorno.dibujarTriangulo(this.circulo.x,this.circulo.y - this.radio,50,20,this.angulo,direccionamiento);
 		}
 	
 	public void girar(double modificador) 
@@ -101,11 +102,13 @@ public class Geometria {
 				this.circulo.y = this.circulo.y - resultado;
 			}
 	}
+
 	
+	/////////////MOTOR DE COLISIONES////////////////////////////
 	public void colisionObstaculo(Obstaculos e)
 		{
 			Point p1 = new Point();        //puntos x,y de mikasa.
-			Point p2 = new Point();			//puntos x,y de alg�n objeto.
+			Point p2 = new Point();			//puntos x,y de algún objeto.
 			
 			p2.x = (int) this.circulo.x;    //como siempre usamos las x e y
 			p2.y = (int) this.circulo.y;    //del circulo de mikasa.
@@ -113,30 +116,41 @@ public class Geometria {
 			p1.x = (int) e.x;
 			p1.y = (int) e.y;
 						
-			double a = p2.x - p1.x;
-			double b = p2.y - p1.y;
-			double absoluto = Math.sqrt(a*a + b*b); //se calcula la distancia haciendo el absoluto de los dos puntos.
+			double a = Math.abs(p2.x - p1.x);   //por si da un número negativo en la resta.
+			double b =  Math.abs(p2.y - p1.y);
+			double absoluto = Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2)); //se calcula la distancia haciendo el absoluto de los dos puntos.
 			
-			if(absoluto < this.circulo.radio + e.radio )
+			double distancia = this.circulo.radio + e.radio;
+			
+			if(absoluto < distancia) //Este bloque solo toma la mitad derecha del obstaculo.
 				{
-					double resultado = (this.circulo.radio + e.radio) - absoluto;
-					resultado = resultado/2;
-					this.circulo.x = this.circulo.x - resultado;
-					this.circulo.y = this.circulo.y - resultado;
-					//System.out.println("SE EST�N TOCANDO");
+					if(this.circulo.x > e.x && this.circulo.y < e.y) //Obtengo la colision desde (0,π/2)
+						{
+							double resultado = distancia - absoluto;
+							this.circulo.x = this.circulo.x + resultado;
+							this.circulo.y = this.circulo.y - resultado;
+						}
+				
+					if(this.circulo.x < e.x && circulo.y < e.y)  //Obtengo la colision desde (π/2, π)
+						{
+							double resultado = distancia - absoluto;
+							this.circulo.x = this.circulo.x - resultado;
+							this.circulo.y = this.circulo.y - resultado;
+						}
+					
+					if(this.circulo.x < e.x && this.circulo.y > e.y) //Obtengo la colision desde (π, 3/2π)
+						{
+							double resultado = distancia - absoluto;
+							this.circulo.x = this.circulo.x - resultado;
+							this.circulo.y = this.circulo.y + resultado;
+						}
+				
+					if(this.circulo.x > e.x && this.circulo.y > e.y) //Obtengo la colision desde (3/2π,2π)
+						{
+							double resultado = distancia - absoluto;
+							this.circulo.x = this.circulo.x + resultado;
+							this.circulo.y = this.circulo.y + resultado;
+						}
 				}
-			
 		}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

@@ -17,6 +17,9 @@ public class Juego extends InterfaceJuego {
 	double ancho;
 	Geometria geo;
 	Obstaculos objeto1;
+	Obstaculos objeto2;
+	Obstaculos objeto3;
+	Obstaculos objeto4;
 	
 	public Juego() {
 		// Inicializa el objeto entorno
@@ -32,11 +35,13 @@ public class Juego extends InterfaceJuego {
 		
 		/////////////////Objetos en el juego/////////////////////
 		objeto1 = new Obstaculos(200,200,50);
+		objeto2 = new Obstaculos(800,200,50);
+		objeto3 = new Obstaculos(200,500,50);
+		objeto4 = new Obstaculos(800,500,50);
 		////////////////////////////////////////////////////////
 		
 		////////////////////Mikasa///////////////////////////////
 		geo = new Geometria(this.x,this.y,this.ancho,this.alto);
-		//geo.colisionObstaculo(objeto1);
 		////////////////////////////////////////////////////////
 
 		// Inicia el juego!
@@ -53,7 +58,14 @@ public class Juego extends InterfaceJuego {
 		{
 			// Procesamiento de un instante de tiempo
 			// ...
+		
+		///////////Colisiones con los obstaculos del juego/////////////////
 		geo.colisionObstaculo(objeto1);
+		geo.colisionObstaculo(objeto2);
+		geo.colisionObstaculo(objeto3);
+		geo.colisionObstaculo(objeto4);
+		//////////////////////////////////////////////////////////////////
+		
 		if (entorno.estaPresionada(entorno.TECLA_DERECHA))
 			geo.girar(Math.PI/180);  //radianes
 			geo.chocaConAncho(this.ancho);
@@ -76,13 +88,17 @@ public class Juego extends InterfaceJuego {
 
 		
 		entorno.cambiarFont("Arial", 18, Color.white);
-		entorno.escribirTexto("angulo: " + geo.angulo, 500, 100);
-		entorno.escribirTexto("coordenada x: " +geo.circulo.x, 500, 150);
-		entorno.escribirTexto("coordenada y: " +geo.circulo.y, 500, 200);
+		//entorno.escribirTexto("angulo: " + geo.angulo, 500, 100);
+		entorno.escribirTexto("coordenada x: " +geo.circulo.x, 500, 100);
+		entorno.escribirTexto("coordenada y: " +geo.circulo.y, 500, 150);
+		
 		
 		///////////cosas en la ventana actualizandose constantemente//////////////////
 		geo.dibujarseEnPantalla(entorno);
 		objeto1.dibujarseEnPantalla(entorno);
+		objeto2.dibujarseEnPantalla(entorno);
+		objeto3.dibujarseEnPantalla(entorno);
+		objeto4.dibujarseEnPantalla(entorno);
 		}
 	
 	@SuppressWarnings("unused")
